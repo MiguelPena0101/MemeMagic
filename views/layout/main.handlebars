@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Magic Meme Generator</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Welcome to the Magic Meme Generator!</h1>
+    </header>
+    <main>
+        <h2>Click "Generate" to enter the "Meme Roulette"</h2>
+        
+        
+        <script id="content-template" type="text/x-handlebars-template">
+            <button onclick="startGenerator()">Generate</button>
+            <button onclick="stopGenerator()">Stop</button>
+            <div id="result">{{resultMessage}}</div>
+        </script>
+        
+    
+        <div id="content-container"></div>
+
+
+        <script>
+            
+            let intervalId;
+
+            function startGenerator() {
+                if (intervalId) {
+                    clearInterval(intervalId); 
+                }
+                intervalId = setInterval(function() {
+                    const randomNumber = Math.floor(Math.random() * 100) + 1;
+                    renderContent(`Generated Number: ${randomNumber}`);
+                }, 1000); 
+            }
+
+            function stopGenerator() {
+                clearInterval(intervalId); 
+                renderContent('Generator stopped');
+            }
+
+            
+            function renderContent(resultMessage) {
+                const source = document.getElementById('content-template').innerHTML;
+                const template = Handlebars.compile(source);
+                const context = { resultMessage };
+                const html = template(context);
+                document.getElementById('content-container').innerHTML = html;
+            }
+
+            
+            renderContent('Click "Generate" to start');
+        </script>
+    </main>
+</body>
+
+</html>
