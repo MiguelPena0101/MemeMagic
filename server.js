@@ -4,15 +4,14 @@ const path = require('path');
 const exphbs = require('express-handlebars');
 const routes = require('./routes');
 const sequelize = require('./config/database');
+const router = require('./routes/apiRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-
-// .env file being used
 require('dotenv').config();
 
-// Applying Middleware to script
+// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -27,7 +26,7 @@ app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 
 // Routes
-app.use(routes);
+app.use(router);
 
 // Start server and sync database
 sequelize.sync({ force: false }).then(() => {
