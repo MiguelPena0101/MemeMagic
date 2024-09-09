@@ -29,6 +29,7 @@ router.post('/memes', async (req, res) => {
   }
 });
 
+
 // POST register a new user
 router.post('/users/register', async (req, res) => {
   try {
