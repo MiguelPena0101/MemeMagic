@@ -1,0 +1,26 @@
+
+<h2>Home Page - View Memes</h2>
+
+{{#if memes.length}}
+    <section class="memes-list">
+        {{#each memes}}
+            <div class="meme-item">
+                <h3>{{this.topText}}</h3>
+                {{#if this.Template}}
+                    <img src="{{this.Template.imageUrl}}" alt="Meme image">
+                {{else}}
+                    <p>No template image available</p>
+                {{/if}}
+                <p>{{this.bottomText}}</p>
+            </div>
+        {{/each}}
+    </section>
+{{else}}
+    <p>No memes available. Create your first meme!</p>
+{{/if}}
+
+{{#if loggedIn}}
+    <a href="/create" class="btn">Create a Meme</a>
+{{else}}
+    <p>Please <a href="/login">login</a> to create a meme.</p>
+{{/if}}
