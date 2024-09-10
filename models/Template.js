@@ -10,6 +10,11 @@ const Template = sequelize.define('Template', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+},
+{
+  freezeTableName: true,
+  underscored: true,
+  modelName: 'Template', 
 });
 
 module.exports = Template;

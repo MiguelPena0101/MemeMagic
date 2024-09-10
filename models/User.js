@@ -11,6 +11,11 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+},
+{
+  freezeTableName: true,
+  underscored: true,
+  modelName: 'User', 
 });
 
 module.exports = User;

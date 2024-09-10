@@ -14,14 +14,11 @@ const Meme = sequelize.define('Meme', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  
 },
 {
-    sequelize,
-    freezeTableName: true,
-    underscored: true,
-    modelName: 'gallery',
-  }
-);
+  freezeTableName: true,
+  underscored: true,
+  modelName: 'Meme', 
+});
 
 module.exports = Meme;
