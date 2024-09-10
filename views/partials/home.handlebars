@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles/styles.css">
+  <title>Meme Magic!</title>
+</head>
+<body>
+  <header>
+    <h1 class="text-6xl bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">Welcome to the Magic Meme Generator!</h1>
+  </header>
+  <main>
+        <h2>Click "Generate" to enter the "Meme Roulette"
+      </h2>
+  <form action="/api/memes" method="POST">
+    <input type="text" name="title" placeholder="Title" required>
+    <input type="text" name="imageUrl" placeholder="Image URL" required>
+    <button type="submit">Create Meme</button>
+  </form>
+
+   <script id="content-template" type="text/x-handlebars-template">
+            <button onclick="startGenerator()">Generate</button>
+            <button onclick="stopGenerator()">Stop</button>
+            <div id="result">{{resultMessage}}</div>
+        </script>
+        
+    
+        <div id="content-container"></div>
+
+
+        <script>
+            
+            let intervalId;
+
+            function startGenerator() {
+                if (intervalId) {
+                    clearInterval(intervalId); 
+                }
+                intervalId = setInterval(function() {
+                    const randomNumber = Math.floor(Math.random() * 100) + 1;
+                    renderContent(`Generated Number: ${randomNumber}`);
+                }, 1000); 
+            }
+
+            function stopGenerator() {
+                clearInterval(intervalId); 
+                renderContent('Generator stopped');
+            }
+
+            
+            function renderContent(resultMessage) {
+                const source = document.getElementById('content-template').innerHTML;
+                const template = Handlebars.compile(source);
+                const context = { resultMessage };
+                const html = template(context);
+                document.getElementById('content-container').innerHTML = html;
+            }
+
+            
+            renderContent('Click "Generate" to start');
+        </script>
+    </main>
+</body>
+
+</html>
+  <div>
+    {{#each memes}}
+      <div class="meme">
+        <h2>{{title}}</h2>
+        <img src="{{imageUrl}}" alt="{{title}}">
+      </div>
+    {{/each}}
+  </div>
+</body>
+</html>
