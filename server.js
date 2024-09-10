@@ -1,10 +1,10 @@
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
-const exphbs = require('express-handlebars');
+const { engine } = require('express-handlebars');
 const routes = require('./routes');
 const sequelize = require('./config/database');
-const router = require('./routes/apiRoutes');
+const router = require('./routes/api/apiRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -22,11 +22,14 @@ app.use(session({
 }));
 
 // Handlebars 
-app.engine('handlebars', exphbs());
-app.set('view engine', 'handlebars');
+app.engine('handlebars', engine({
+  defaultLayout: 'main',
+  layoutsDir: path.join(__dirname, 'views', 'layouts'),
+  partialsDir: path.join(__dirname, 'views', 'partials'), // Correctly register partials directory
+}));
 
 // Routes
-app.use(router);
+app.use(router)
 
 // Start server and sync database
 sequelize.sync({ force: false }).then(() => {
