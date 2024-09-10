@@ -1,9 +1,10 @@
-require('dotenv').config(); // Load environment variables
+require('dotenv').config(); 
 const express = require('express');
 const session = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
 const path = require('path');
 const { engine } = require('express-handlebars');
-const routes = require('./routes'); // Import combined routes (index.js in routes folder)
+const routes = require('./routes'); 
 const sequelize = require('./config/database');
 
 const app = express();
@@ -15,16 +16,23 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from the public directory
 
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'defaultsecret', // Provide a fallback for the secret
+  store: new pgSession({
+    conString: process.env.DATABASE_URL
+  }),
+  secret: process.env.SESSION_SECRET === 'defaultsecret', // Provide a fallback for the secret
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 30 * 24 * 60 * 60 * 1000
+  }
 }));
 
 //HANDLEBARS
 app.engine('handlebars', engine({
   defaultLayout: 'main',
   layoutsDir: path.join(__dirname, 'views', 'layouts'),
-  partialsDir: path.join(__dirname, 'views', 'partials'), // Register partials directory
+  partialsDir: path.join(__dirname, 'views', 'partials'), 
 }));
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
@@ -38,3 +46,4 @@ sequelize.sync({ force: false })
     app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
   })
   .catch(error => console.error('Unable to connect to the database:', error));
+  
