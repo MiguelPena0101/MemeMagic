@@ -1,52 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title>Magic Meme Generator</title>
+    <title>Meme Magic</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
 </head>
-
 <body>
     <header>
         <h1>Welcome to Meme Magic!</h1>
     </header>
     <main>
-        <h2>Click "Generate" to enter the "Meme Roulette"</h2>
-        
-        
+        <div id="content-container"></div>
+
+        <!-- Handlebars template definition -->
         <script id="content-template" type="text/x-handlebars-template">
             <button onclick="startGenerator()">Generate</button>
             <button onclick="stopGenerator()">Stop</button>
             <div id="result">{{resultMessage}}</div>
         </script>
-        
-    
-        <div id="content-container"></div>
-
 
         <script>
-            
             let intervalId;
 
+            // Function to start generating memes
             function startGenerator() {
                 if (intervalId) {
-                    clearInterval(intervalId); 
+                    clearInterval(intervalId);
                 }
-                intervalId = setInterval(function() {
-                    const randomNumber = Math.floor(Math.random() * 100) + 1;
-                    renderContent(`Generated Number: ${randomNumber}`);
-                }, 1000); 
+                intervalId = setInterval(fetchAndRenderMeme, 2000); // Fetch meme every 2 seconds
             }
 
+            // Function to stop generating memes
             function stopGenerator() {
-                clearInterval(intervalId); 
+                clearInterval(intervalId);
                 renderContent('Generator stopped');
             }
 
-            
+            // Function to fetch memes from Imgflip API and render content
+            function fetchAndRenderMeme() {
+                fetch('https://api.imgflip.com/get_memes')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.data.memes.length > 0) {
+                            const memes = data.data.memes;
+                            const randomIndex = Math.floor(Math.random() * memes.length);
+                            const meme = memes[randomIndex];
+                            renderContent(`Generated Meme: ${meme.name}`);
+                            document.getElementById('content-container').innerHTML += `
+                                <img src="${meme.url}" alt="${meme.name}" style="max-width:300px;">
+                            `;
+                        } else {
+                            renderContent('No memes available.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching memes:', error);
+                        renderContent('Error generating meme.');
+                    });
+            }
+
+            // Function to compile and render the Handlebars template
             function renderContent(resultMessage) {
                 const source = document.getElementById('content-template').innerHTML;
                 const template = Handlebars.compile(source);
@@ -55,10 +70,9 @@
                 document.getElementById('content-container').innerHTML = html;
             }
 
-            
+            // Initial call to render the buttons
             renderContent('Click "Generate" to start');
         </script>
     </main>
 </body>
-
 </html>
