@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Meme Magic</title>
+    <title>Magic Meme Generator</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
@@ -29,13 +29,13 @@
                 if (intervalId) {
                     clearInterval(intervalId);
                 }
-                intervalId = setInterval(fetchAndRenderMeme, 2000); // Fetch meme every 2 seconds
+                intervalId = setInterval(fetchAndRenderMeme, 5000); // Fetch meme every 5 seconds
             }
 
-            // Function to stop generating memes
+            // Function to stop generating memes without clearing the last one
             function stopGenerator() {
-                clearInterval(intervalId);
-                renderContent('Generator stopped');
+                clearInterval(intervalId); // Clear the interval
+                document.getElementById('result').textContent = 'Generator stopped'; vie
             }
 
             // Function to fetch memes from Imgflip API and render content
