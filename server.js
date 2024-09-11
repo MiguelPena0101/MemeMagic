@@ -13,13 +13,13 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from the public directory
+app.use(express.static(path.join(__dirname, 'public'))); 
 
 app.use(session({
   store: new pgSession({
     conString: process.env.DATABASE_URL
   }),
-  secret: process.env.SESSION_SECRET === 'defaultsecret', // Provide a fallback for the secret
+  secret: process.env.SESSION_SECRET, 
   resave: false,
   saveUninitialized: false,
   cookie: {
