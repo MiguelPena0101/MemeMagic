@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magic Meme Generator</title>
+    <title>Meme Magic</title>
     <link href="/output.css" rel="stylesheet"> <!-- Tailwind CSS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
 </head>
@@ -18,6 +19,7 @@
             {{else}}
                 <button onclick="location.href='/login'" class="text-blue-600 bg-midnight font-bold hover:text-green-700">Login</button>
                 <button onclick="location.href='/register'" class="bg-midnight text-bubble-gum hover:text-yellow-400 font-bold">Register</button>
+
             {{/if}}
         </nav>
     </header>
@@ -26,6 +28,7 @@
 
         <!-- Handlebars template definition -->
         <script id="content-template" type="text/x-handlebars-template">
+
     <div class="flex flex-col items-center space-y-4">
         <button onclick="startGenerator()" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-lg">
             Generate
@@ -40,13 +43,16 @@
                 <div class="flex justify-center mt-4">
                     <img class="max-w-full h-auto" src="{{memeImageUrl}}" alt="Generated Meme">
                 </div>
+
                 {{#if loggedIn}}
                     <button onclick="saveMeme('{{memeImageUrl}}', '{{memeName}}')">Save Meme</button>
                 {{else}}
                     <p>Please <a href="/login">login</a> to save memes.</p>
                 {{/if}}
             {{/if}}
-</script>
+
+        </script>
+
 
         <script>
             let intervalId;
@@ -62,7 +68,7 @@
             // Function to stop generating memes without clearing the last one
             function stopGenerator() {
                 clearInterval(intervalId); // Clear the interval
-                document.getElementById('result').textContent = 'Generator stopped'; vie
+                document.getElementById('result').textContent = 'Generator stopped';
             }
 
             // Function to fetch memes from Imgflip API and render content
@@ -74,10 +80,7 @@
                             const memes = data.data.memes;
                             const randomIndex = Math.floor(Math.random() * memes.length);
                             const meme = memes[randomIndex];
-                            renderContent(`Generated Meme: ${meme.name}`);
-                            document.getElementById('content-container').innerHTML += `
-                                <img src="${meme.url}" alt="${meme.name}" style="max-width:300px;">
-                            `;
+                            renderContent(`Generated Meme: ${meme.name}`, meme.url, meme.name);
                         } else {
                             renderContent('No memes available.');
                         }
@@ -89,12 +92,56 @@
             }
 
             // Function to compile and render the Handlebars template
-            function renderContent(resultMessage) {
+            function renderContent(resultMessage, memeImageUrl = '', memeName = '') {
                 const source = document.getElementById('content-template').innerHTML;
                 const template = Handlebars.compile(source);
-                const context = { resultMessage };
+                const context = { resultMessage, memeImageUrl, memeName, loggedIn: {{loggedIn}} };
                 const html = template(context);
                 document.getElementById('content-container').innerHTML = html;
+            }
+
+            // Function to save a generated meme
+            function saveMeme(imageUrl, name) {
+                fetch('/api/memes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        topText: name, // Using the meme's name as top text
+                        bottomText: '', // No bottom text
+                        imageUrl: imageUrl,
+                        templateId: null // Assuming no specific template
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.id) {
+                        alert('Meme saved successfully!');
+                    } else {
+                        alert('Failed to save meme.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving meme:', error);
+                    alert('Error saving meme.');
+                });
+            }
+
+            // Function to log out
+            function logout() {
+                fetch('/api/users/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(() => {
+                    location.reload(); // Reload the page after logout
+                })
+                .catch(error => {
+                    console.error('Error logging out:', error);
+                });
             }
 
             // Initial call to render the buttons
