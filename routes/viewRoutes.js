@@ -19,7 +19,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-
 // GET meme creation page
 router.get('/create', async (req, res) => {
   try {
@@ -49,6 +48,5 @@ router.get('/register', (req, res) => {
   }
   res.render('register');
 });
-
 
 module.exports = router;

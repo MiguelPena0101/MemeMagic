@@ -12,12 +12,28 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from the public directory
+app.use(express.static(path.join(__dirname, 'public'), {
+  setHeaders: (res, path) => {
+    {
+      if (path.endsWith('.css')) {
+        res.setHeader('Content-Type', 'text/css');
+      }
+  }
+}
+})); // Serve static files from the public directory
+
 
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'defaultsecret', // Provide a fallback for the secret
+  store: new pgSession({
+    conString: process.env.DATABASE_URL,
+  }),
+  secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+  },
 }));
 
 //HANDLEBARS
