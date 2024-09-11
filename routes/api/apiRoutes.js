@@ -1,36 +1,9 @@
 const express = require('express');
-const { Meme, User, Template } = require('../../models');
 const bcrypt = require('bcrypt');
+const { Meme, User, Template } = require('../../models');
 const router = express.Router();
 
-// GET all memes
-router.get('/memes', async (req, res) => {
-  try {
-    const memes = await Meme.findAll({ include: [User, Template] });
-    res.json(memes);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-// POST create a new meme
-router.post('/memes', async (req, res) => {
-  try {
-    const newMeme = await Meme.create({
-      topText: req.body.topText,
-      bottomText: req.body.bottomText,
-      imageUrl: req.body.imageUrl,
-      userId: req.session.userId, // Assuming user is logged in and session contains userId
-      templateId: req.body.templateId,
-    });
-    res.status(201).json(newMeme);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-
-// POST register a new user
+// Register a new user
 router.post('/users/register', async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -39,13 +12,13 @@ router.post('/users/register', async (req, res) => {
       password: hashedPassword,
     });
     req.session.userId = newUser.id;
-    res.status(201).json(newUser);
+    res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-// POST login a user
+// User login
 router.post('/users/login', async (req, res) => {
   try {
     const user = await User.findOne({ where: { username: req.body.username } });
@@ -59,7 +32,7 @@ router.post('/users/login', async (req, res) => {
   }
 });
 
-// POST logout a user
+// User logout
 router.post('/users/logout', (req, res) => {
   if (req.session.userId) {
     req.session.destroy(() => {
@@ -70,5 +43,33 @@ router.post('/users/logout', (req, res) => {
   }
 });
 
+// GET all memes
+router.get('/memes', async (req, res) => {
+  try {
+    const memes = await Meme.findAll({ include: [User, Template] });
+    res.json(memes);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// POST create a new meme
+router.post('/memes', async (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({ message: 'You must be logged in to save memes.' });
+  }
+  try {
+    const newMeme = await Meme.create({
+      topText: req.body.topText,
+      bottomText: req.body.bottomText,
+      imageUrl: req.body.imageUrl,
+      userId: req.session.userId,
+      templateId: req.body.templateId,
+    });
+    res.status(201).json(newMeme);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 module.exports = router;
