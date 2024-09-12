@@ -1,4 +1,8 @@
 require('dotenv').config();
+console.log('Loaded ENV Variables:');
+console.log('DATABASE_URL:', process.env.DATABASE_URL);
+console.log('SESSION_SECRET:', process.env.SESSION_SECRET);
+console.log('NODE_ENV:', process.env.NODE_ENV);
 const express = require('express');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
@@ -56,3 +60,5 @@ sequelize.sync({ force: false })
     app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
   })
   .catch(error => console.error('Unable to connect to the database:', error));
+
+  

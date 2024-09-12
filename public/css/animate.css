@@ -1,0 +1,15 @@
+@keyframes colorChange {
+    0% {
+      color: #3490dc; /* Tailwind blue-500 */
+    }
+    50% {
+      color: #ff5733; /* Custom color or Tailwind red-500 */
+    }
+    100% {
+      color: #3490dc; /* Tailwind blue-500 */
+    }
+  }
+  
+  .animate-color-change {
+    animation: colorChange 3s infinite;
+  }
