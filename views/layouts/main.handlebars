@@ -10,9 +10,9 @@
 <body class="bg-bermuda">
 
     <header class="text-center p-6">
-        <h1 class="text-4xl text-animate-pulse-text text-white font-bold ">Welcome to Meme Magic!</h1>
+        <h1 class="text-4xl font-bold animate-color-change memeTitle ">Welcome to Meme Magic!</h1>
         <br>
-       <p class="text-blue-500 animate-color-change font-bold">
+       <p class="text-red-500 animate-color-change font-bold">
         <style>
     @keyframes colorChange {
       0% {
@@ -81,7 +81,9 @@
                             const meme = memes[randomIndex];
                             renderContent(`Generated Meme: ${meme.name}`);
                             document.getElementById('content-container').innerHTML += `
+                            <div class='flex justify-center items-center'>
                                 <img src="${meme.url}" alt="${meme.name}" style="max-width:300px;">
+                                </div>
                             `;
                         } else {
                             renderContent('No memes available.');
