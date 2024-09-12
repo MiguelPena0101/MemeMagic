@@ -26,11 +26,8 @@
         <!-- Handlebars template definition -->
         <script id="content-template" type="text/x-handlebars-template">
             <div class="flex flex-col items-center space-y-4">
-                <button onclick="startGenerator()" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-lg">
+                <button onclick="generateMeme()" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-lg">
                     Generate
-                </button>
-                <button onclick="stopGenerator()" class="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 shadow-lg">
-                    Stop
                 </button>
 
                 <div id="result" class="text-center mt-4">{{resultMessage}}</div>
@@ -50,20 +47,15 @@
         </script>
 
         <script>
-            let intervalId;
-
-            // Function to start generating memes
-            function startGenerator() {
-                if (intervalId) {
-                    clearInterval(intervalId);
+            // Function to generate memes when the button is clicked
+            function generateMeme() {
+                // Check if the user is logged in before generating
+                const loggedIn = {{#if loggedIn}}true{{else}}false{{/if}};
+                if (!loggedIn) {
+                    renderContent('Please log in to generate a meme.');
+                    return;
                 }
-                intervalId = setInterval(fetchAndRenderMeme, 5000); // Fetch meme every 5 seconds
-            }
-
-            // Function to stop generating memes without clearing the last one
-            function stopGenerator() {
-                clearInterval(intervalId); // Clear the interval
-                document.getElementById('result').textContent = 'Generator stopped';
+                fetchAndRenderMeme();
             }
 
             // Function to fetch memes from Imgflip API and render content
