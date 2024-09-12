@@ -49,7 +49,7 @@
             }
 
             // Function to fetch memes from Imgflip API and render content
-            function fetchAndRenderMeme() {
+                        function fetchAndRenderMeme() {
                 fetch('https://api.imgflip.com/get_memes')
                     .then(response => response.json())
                     .then(data => {
@@ -57,7 +57,10 @@
                             const memes = data.data.memes;
                             const randomIndex = Math.floor(Math.random() * memes.length);
                             const meme = memes[randomIndex];
-                            renderContent(`Generated Meme: ${meme.name}`, meme.url, meme.name);
+                            renderContent(`Generated Meme: ${meme.name}`);
+                            document.getElementById('content-container').innerHTML += `
+                                <img src="${meme.url}" alt="${meme.name}" style="max-width:300px;">
+                            `;
                         } else {
                             renderContent('No memes available.');
                         }
@@ -69,15 +72,10 @@
             }
 
             // Function to compile and render the Handlebars template
-            function renderContent(resultMessage, memeImageUrl = '', memeName = '') {
+           function renderContent(resultMessage) {
                 const source = document.getElementById('content-template').innerHTML;
                 const template = Handlebars.compile(source);
-                const context = { 
-                    resultMessage, 
-                    memeImageUrl, 
-                    memeName, 
-                    loggedIn: {{#if loggedIn}}true{{else}}false{{/if}} 
-                };
+                const context = { resultMessage };
                 const html = template(context);
                 document.getElementById('content-container').innerHTML = html;
             }
