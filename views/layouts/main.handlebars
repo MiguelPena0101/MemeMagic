@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meme Magic</title>
@@ -9,7 +8,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
 </head>
 <body class="bg-bermuda">
-    {{!-- <body style="background-color:#78dcca;"> --}}
 
     <header class="text-center p-6">
         <h1 class="text-4xl text-white font-bold">Welcome to Meme Magic!</h1>
@@ -19,7 +17,6 @@
             {{else}}
                 <button onclick="location.href='/login'" class="text-blue-600 bg-midnight font-bold hover:text-green-700">Login</button>
                 <button onclick="location.href='/register'" class="bg-midnight text-bubble-gum hover:text-yellow-400 font-bold">Register</button>
-
             {{/if}}
         </nav>
     </header>
@@ -28,31 +25,29 @@
 
         <!-- Handlebars template definition -->
         <script id="content-template" type="text/x-handlebars-template">
+            <div class="flex flex-col items-center space-y-4">
+                <button onclick="startGenerator()" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-lg">
+                    Generate
+                </button>
+                <button onclick="stopGenerator()" class="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 shadow-lg">
+                    Stop
+                </button>
 
-    <div class="flex flex-col items-center space-y-4">
-        <button onclick="startGenerator()" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-lg">
-            Generate
-        </button>
-        <button onclick="stopGenerator()" class="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 shadow-lg">
-            Stop
-        </button>
+                <div id="result" class="text-center mt-4">{{resultMessage}}</div>
+                
+                {{#if memeImageUrl}}
+                    <div class="flex justify-center mt-4">
+                        <img class="max-w-full h-auto" src="{{memeImageUrl}}" alt="Generated Meme">
+                    </div>
 
-        <div id="result" class="text-center mt-4">{{resultMessage}}</div>
-        
-         {{#if memeImageUrl}}
-                <div class="flex justify-center mt-4">
-                    <img class="max-w-full h-auto" src="{{memeImageUrl}}" alt="Generated Meme">
-                </div>
-
-                {{#if loggedIn}}
-                    <button onclick="saveMeme('{{memeImageUrl}}', '{{memeName}}')">Save Meme</button>
-                {{else}}
-                    <p>Please <a href="/login">login</a> to save memes.</p>
+                    {{#if loggedIn}}
+                        <button onclick="saveMeme('{{memeImageUrl}}', '{{memeName}}')" class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700">Save Meme</button>
+                    {{else}}
+                        <p>Please <a href="/login">login</a> to save memes.</p>
+                    {{/if}}
                 {{/if}}
-            {{/if}}
-
+            </div>
         </script>
-
 
         <script>
             let intervalId;
@@ -95,7 +90,12 @@
             function renderContent(resultMessage, memeImageUrl = '', memeName = '') {
                 const source = document.getElementById('content-template').innerHTML;
                 const template = Handlebars.compile(source);
-                const context = { resultMessage, memeImageUrl, memeName, loggedIn: {{loggedIn}} };
+                const context = { 
+                    resultMessage, 
+                    memeImageUrl, 
+                    memeName, 
+                    loggedIn: {{#if loggedIn}}true{{else}}false{{/if}} 
+                };
                 const html = template(context);
                 document.getElementById('content-container').innerHTML = html;
             }
