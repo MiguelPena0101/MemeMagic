@@ -10,7 +10,29 @@
 <body class="bg-bermuda">
 
     <header class="text-center p-6">
-        <h1 class="text-4xl text-white font-bold">Welcome to Meme Magic!</h1>
+        <h1 class="text-4xl text-animate-pulse-text text-white font-bold ">Welcome to Meme Magic!</h1>
+        <br>
+       <p class="text-blue-500 animate-color-change font-bold">
+        <style>
+    @keyframes colorChange {
+      0% {
+        color: #3490dc;
+      }
+      50% {
+        color: #ff5733;
+      }
+      100% {
+        color: #3490dc;
+      }
+    }
+    
+    .animate-color-change {
+      animation: colorChange 3s infinite;
+    }
+    Feel Free To Make An Account!
+  </style>
+        Feel Free To Make An Account!</p>
+        <br>
         <nav>
             {{#if loggedIn}}
                 <button onclick="logout()" class="bg-red-500 text-white font-bold">Logout</button>
@@ -33,7 +55,7 @@
                 <div id="result" class="text-center mt-4">{{resultMessage}}</div>
                 
                 {{#if memeImageUrl}}
-                    <div class="flex justify-center mt-4">
+                    <div class="flex justify-center items-center mt-4">
                         <img class="max-w-full h-auto" src="{{memeImageUrl}}" alt="Generated Meme">
                     </div>
 
@@ -57,7 +79,10 @@
                             const memes = data.data.memes;
                             const randomIndex = Math.floor(Math.random() * memes.length);
                             const meme = memes[randomIndex];
-                            renderContent(`Generated Meme: ${meme.name}`, meme.url, meme.name);
+                            renderContent(`Generated Meme: ${meme.name}`);
+                            document.getElementById('content-container').innerHTML += `
+                                <img src="${meme.url}" alt="${meme.name}" style="max-width:300px;">
+                            `;
                         } else {
                             renderContent('No memes available.');
                         }
@@ -72,11 +97,11 @@
             function renderContent(resultMessage, memeImageUrl = '', memeName = '') {
                 const source = document.getElementById('content-template').innerHTML;
                 const template = Handlebars.compile(source);
-                const context = { 
-                    resultMessage, 
-                    memeImageUrl, 
-                    memeName, 
-                    loggedIn: {{#if loggedIn}}true{{else}}false{{/if}} 
+                const context = {
+                    resultMessage,
+                    memeImageUrl,
+                    memeName,
+                    loggedIn: {{#if loggedIn}}true{{else}}false{{/if}}
                 };
                 const html = template(context);
                 document.getElementById('content-container').innerHTML = html;
