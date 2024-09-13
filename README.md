@@ -4,7 +4,7 @@ Welcome to the **MemeMagic**! This application allows users to generate, view, a
 
 To visit this project's deployed website please click [HERE](https://mememagic.onrender.com/)
 
-![Screenshot of home page](./public/images/screenshot.png)
+![Screenshot of home page](./public/images/screenshots.png)
 
 ## Overview
 
@@ -64,7 +64,7 @@ so that I can generate and save memes that express my creativity or humor.
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/yourusername/meme-magic.git
+   git clone git@github.com:MiguelPena0101/MemeMagic.git
    ```
 
 2. **Install Dependencies**
