@@ -13,9 +13,9 @@ Meme Magic is a full-stack web application that enables users to:
 - View generated memes on the homepage.
 - Save memes to a database for future reference.
 
-## User Story
+# User Story
 
-# As a user,
+## As a user,
 - I want to Generate a meme by selecting a template and adding custom text,
 so that I can generate and save memes that express my creativity or humor.
 
