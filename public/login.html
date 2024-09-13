@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="/output.css" rel="stylesheet">
+</head>
+<body class="bg-bermuda">
+    <header class="text-center p-6">
+        <h1 class="text-4xl font-bold">Login</h1>
+    </header>
+    <main class="flex justify-center items-center h-screen">
+        <form id="login-form" class="bg-white p-6 rounded shadow-md">
+            <h2 class="text-2xl font-bold mb-4">Login</h2>
+            <div class="mb-4">
+                <label for="login-username" class="block text-gray-700">Username:</label>
+                <input type="text" id="login-username" class="border rounded w-full py-2 px-3" required>
+            </div>
+            <div class="mb-4">
+                <label for="login-password" class="block text-gray-700">Password:</label>
+                <input type="password" id="login-password" class="border rounded w-full py-2 px-3" required>
+            </div>
+            <button type="submit" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">Login</button>
+            <p class="mt-4">Don't have an account? <a href="./register.html" class="text-blue-600">Register</a></p>
+        </form>
+    </main>
+    <script src="/login.js"></script>
+</body>
+</html>
